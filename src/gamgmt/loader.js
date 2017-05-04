@@ -26,7 +26,8 @@ export class Loader {
    * @return {Object} an updated cache with the file appended
    */
   static addToCache(cache, [ file, filename ]) {
-    return Object.assign(cache, { [filename]: file });
+    const [ filenameNoExt, _ ] = filename.split('.');
+    return Object.assign(cache, { [filenameNoExt]: file });
   }
   
   /**
