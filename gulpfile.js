@@ -6,18 +6,21 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var babel = require('babelify');
 var connect = require('gulp-connect');
+var util = require('gulp-util');
 
 function compile(watch) {
-  var bundler = watchify(browserify('./src/index.js', { debug: true }).transform(babel));
-
+  // define a path to watch - allow other paths to be passed in
+  var watchPath = util.env.path ? util.env.path : '';
+  var bundler = watchify(browserify('./' + watchPath + 'src/index.js', { debug: true }).transform(babel));
+  
   function rebundle() {
     bundler.bundle()
       .on('error', function(err) { console.error(err); this.emit('end'); })
       .pipe(source('build.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./dist'));
+      .pipe(sourcemaps.write('./' + watchPath))
+      .pipe(gulp.dest('./' + watchPath + 'dist'));
   }
 
   if (watch) {
