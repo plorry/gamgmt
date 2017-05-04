@@ -1,10 +1,18 @@
 import { Display } from './gamgmt/display';
-import { Loader } from './gamgmt/loader';
+import { Game } from './gamgmt/game';
+import { Draw } from './gamgmt/draw';
 
-const main = function main(imgCache) {
-  var d = Display.getCanvas();
-  d.imageSmoothinEnabled = false;
-  d.drawImage(imgCache['genie.gif'], 0, 0,120, 120, 0, 0, 220, 220);
+const FPS = 30;
+const shortFrame = (dt) => 1000 / dt > FPS;
+
+
+const main = function main(gameData, timestamp=0, lasttime=0) {
+  const dt = timestamp - lasttime;
+  // throttle FPS
+  shortFrame(dt) && setTimeout(()=>{}, (1000 / FPS) - dt); 
+ 
+  Draw.render(gameData.canvas, gameData.levels);
+  requestAnimationFrame((newtime) => main(gameData, newtime, timestamp));
 };
 
-window.onload = Loader.loadImages().then(main);
+window.onload = Game.initGame().then(main);

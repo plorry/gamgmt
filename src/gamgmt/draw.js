@@ -1,4 +1,5 @@
 export class Draw {
-  static drawImage(image) {
+  static render(canvas, drawData) {
+    canvas.drawImage(drawData.backgroundImage, 0, 0);
   }
 }
